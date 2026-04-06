@@ -12,7 +12,7 @@ const SocialMediaButton = ({ text, bgColor, icon, onPress }: Props) => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: bgColor }]}
-      activeOpacity={0.8}
+      activeOpacity={0.5}
       onPress={onPress}
     >
       <View style={styles.content}>
