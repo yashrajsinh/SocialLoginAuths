@@ -7,10 +7,10 @@ type Props = {
 
 const RegisterScreen = (props: Props) => {
   //accept provider here based on passed type
-  const { provider } = props.route.params;
+  const { provider, user } = props.route.params;
   return (
     <View>
-      <Text>Sign in with {provider}</Text>
+      {user ? <Text>Sign in with {user.email}</Text> : <Text>Loading...</Text>}
     </View>
   );
 };

@@ -1,14 +1,48 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, ToastAndroid } from 'react-native';
+import React, { useState } from 'react';
 
+//const array
 import { SOCIALS } from '../providers/IconsProvide';
+//buttons component
 import SocialMediaButton from '../components/SocialMediaButtons/SocailMediaButtons';
+//auth service
+import { googleLogIn } from '../services/Auth/googleAuth';
 
 type Props = {
   navigation: any;
 };
+type GoogleUser = {
+  id: string;
+  name: string | null;
+  email: string;
+  photo: string | null;
+  familyName: string | null;
+  givenName: string | null;
+};
 
 const SignUpScreen = ({ navigation }: Props) => {
+  //useState for user response
+  const [user, setUser] = useState<GoogleUser | null>(null);
+  //function to handle click
+  const handleLogin = async () => {
+    try {
+      ToastAndroid.show('Click works ', ToastAndroid.SHORT);
+      const res = await googleLogIn();
+      ToastAndroid.show('Log in success ' + '' + res, ToastAndroid.LONG);
+      setUser(res.user);
+
+      // navigate ONLY after login finishes
+      navigation.navigate('Register', {
+        provider: 'Google',
+        user: res.user,
+      });
+      console.log(res); // debug
+    } catch (e) {
+      console.log(e);
+      ToastAndroid.show('error  ' + ' ' + e, ToastAndroid.LONG);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -25,9 +59,11 @@ const SignUpScreen = ({ navigation }: Props) => {
             text={item.text}
             bgColor={item.bgColor}
             icon={item.icon}
-            onPress={
-              () => navigation.navigate('Register', { provider: item.provider }) //based on screen name pass a provider
-            }
+            onPress={() => {
+              if (item.provider === 'Google') {
+                handleLogin();
+              }
+            }}
           />
         ))}
       </View>
