@@ -4,7 +4,11 @@ import React from 'react';
 import { SOCIALS } from '../providers/IconsProvide';
 import SocialMediaButton from '../components/SocialMediaButtons/SocailMediaButtons';
 
-const SignUpScreen = () => {
+type Props = {
+  navigation: any;
+};
+
+const SignUpScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -21,7 +25,7 @@ const SignUpScreen = () => {
             text={item.text}
             bgColor={item.bgColor}
             icon={item.icon}
-            onPress={() => console.log(item.text)}
+            onPress={() => navigation.navigate(item.screen)}
           />
         ))}
       </View>

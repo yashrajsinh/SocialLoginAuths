@@ -5,7 +5,7 @@ type Props = {
   text: string;
   bgColor: string;
   icon: any;
-  onPress?: () => void; // optional (good practice)
+  onPress?: () => void;
 };
 
 const SocialMediaButton = ({ text, bgColor, icon, onPress }: Props) => {

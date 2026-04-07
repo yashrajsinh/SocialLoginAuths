@@ -6,14 +6,18 @@
  */
 
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-//screens
-import SignUpScreen from './src/screens/SignUpScreen';
+//navigation
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './src/navigation/AppNavigation';
+
 function App() {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FB' }}>
-        <SignUpScreen />
-      </SafeAreaView>
+    <SafeAreaProvider style={{ backgroundColor: '#F8F9FB' }}>
+      <NavigationContainer>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FB' }}>
+          <AppNavigator />
+        </SafeAreaView>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
