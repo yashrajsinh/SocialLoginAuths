@@ -25,7 +25,9 @@ const SignUpScreen = ({ navigation }: Props) => {
             text={item.text}
             bgColor={item.bgColor}
             icon={item.icon}
-            onPress={() => navigation.navigate(item.screen)}
+            onPress={
+              () => navigation.navigate('Register', { provider: item.provider }) //based on screen name pass a provider
+            }
           />
         ))}
       </View>
