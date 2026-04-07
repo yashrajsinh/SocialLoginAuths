@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 
 //const array
@@ -21,23 +21,25 @@ type GoogleUser = {
 };
 
 const SignUpScreen = ({ navigation }: Props) => {
-  //useState for user response
-  const [user, setUser] = useState<GoogleUser | null>(null);
+  //useState for loader
+  const [loading, setLoading] = useState(false);
+
   //function to handle click
   const handleLogin = async () => {
     try {
+      setLoading(true); // start loader
       const res = await googleLogIn();
-
-      setUser(res.user);
 
       // navigate ONLY after login finishes
       navigation.navigate('Register', {
         provider: 'Google',
-        user: res.user,
+        ...res,
       });
       console.log(res); // debug
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false); // stop loader
     }
   };
 
@@ -72,6 +74,12 @@ const SignUpScreen = ({ navigation }: Props) => {
           Already have an account? <Text style={styles.loginText}>Login</Text>
         </Text>
       </View>
+      {/* Show Loader */}
+      {loading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#111827" />
+        </View>
+      )}
     </View>
   );
 };
@@ -118,5 +126,15 @@ const styles = StyleSheet.create({
   loginText: {
     color: '#111827',
     fontWeight: '600',
+  },
+  loader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

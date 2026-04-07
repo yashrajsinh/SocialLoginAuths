@@ -11,6 +11,7 @@ GoogleSignin.configure({
   offlineAccess: true,
 });
 
+//function to log in the user
 export const googleLogIn = async () => {
   try {
     await GoogleSignin.hasPlayServices();
@@ -20,11 +21,30 @@ export const googleLogIn = async () => {
       throw new Error('Google sign-in cancelled');
     }
 
-    const user = response.data.user;
+    //Get secure token
     const { idToken } = await GoogleSignin.getTokens();
-    return { idToken, user };
+    const user = response.data.user;
+    return {
+      email: user.email,
+      name: user.name,
+      profilePic: user.photo,
+      idToken,
+    };
   } catch (error) {
     console.log('Error ' + error);
     throw error;
+  }
+};
+//function to log out the user
+export const googleLogOut = async () => {
+  try {
+    // check if user is signed in
+    const user = await GoogleSignin.getCurrentUser();
+    if (user) {
+      await GoogleSignin.signOut();
+    }
+    console.log('Google logout success');
+  } catch (e) {
+    console.log('Error logging out ' + e);
   }
 };
