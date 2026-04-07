@@ -7,6 +7,7 @@ import { SOCIALS } from '../providers/IconsProvide';
 import SocialMediaButton from '../components/SocialMediaButtons/SocailMediaButtons';
 //auth service
 import { googleLogIn } from '../services/Auth/googleAuth';
+import { loginWithFacebook } from '../services/Auth/metaAuth';
 
 type Props = {
   navigation: any;
@@ -42,7 +43,28 @@ const SignUpScreen = ({ navigation }: Props) => {
       setLoading(false); // stop loader
     }
   };
+  //handle FB login
+  const handleFaceBookLogIn = async () => {
+    try {
+      setLoading(true);
 
+      const token = await loginWithFacebook();
+
+      if (!token) {
+        console.log('Facebook login cancelled');
+        return;
+      }
+
+      navigation.navigate('Register', {
+        provider: 'Facebook',
+        token,
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -62,6 +84,8 @@ const SignUpScreen = ({ navigation }: Props) => {
             onPress={() => {
               if (item.provider === 'Google') {
                 handleLogin();
+              } else if (item.provider === 'Facebook') {
+                handleFaceBookLogIn();
               }
             }}
           />
