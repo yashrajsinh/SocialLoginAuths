@@ -26,9 +26,8 @@ const SignUpScreen = ({ navigation }: Props) => {
   //function to handle click
   const handleLogin = async () => {
     try {
-      ToastAndroid.show('Click works ', ToastAndroid.SHORT);
       const res = await googleLogIn();
-      ToastAndroid.show('Log in success ' + '' + res, ToastAndroid.LONG);
+
       setUser(res.user);
 
       // navigate ONLY after login finishes
@@ -39,7 +38,6 @@ const SignUpScreen = ({ navigation }: Props) => {
       console.log(res); // debug
     } catch (e) {
       console.log(e);
-      ToastAndroid.show('error  ' + ' ' + e, ToastAndroid.LONG);
     }
   };
 

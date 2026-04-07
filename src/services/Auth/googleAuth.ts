@@ -6,6 +6,8 @@ import {
 GoogleSignin.configure({
   webClientId:
     '248255080713-vt59irbdalaht3tu2u85its89gschu3m.apps.googleusercontent.com',
+  iosClientId:
+    '248255080713-jgr15n2fmpq1r0bdu1ru1o685nqop5ib.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
