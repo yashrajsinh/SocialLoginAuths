@@ -27,7 +27,7 @@ export const googleLogIn = async () => {
     return {
       email: user.email,
       name: user.name,
-      profilePic: user.photo,
+      photo: user.photo,
       idToken,
     };
   } catch (error) {

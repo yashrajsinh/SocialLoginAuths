@@ -115,5 +115,6 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+        implementation "com.facebook.android:facebook-android-sdk:18.0.3"
     }
 }
