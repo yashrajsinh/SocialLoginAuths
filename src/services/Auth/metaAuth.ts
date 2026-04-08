@@ -25,7 +25,7 @@ export const loginWithFacebook = async () => {
 
     // Fetch user info (NO email to avoid error)
     const response = await fetch(
-      `https://graph.facebook.com/v18.0/me?fields=id,name,picture.type(large)&access_token=${token}`,
+      `https://graph.facebook.com/v18.0/me?fields=id,name,picture.type(large){url}&redirect=false&access_token=${token}`,
     );
 
     const user = await response.json();
