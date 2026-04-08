@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { SOCIALS } from '../providers/IconsProvide';
+import LogOutButton from '../components/LogOutButton/LogOutButton';
 
 const RegisterScreen = ({ route }: any) => {
   const { provider, token, name, email, photo, id } = route.params || {};
-
-  const cleanPhoto = photo?.replace('=s96-c', '=s400-c');
 
   const social = Object.values(SOCIALS).find(
     item => item.provider === provider,
@@ -15,13 +14,11 @@ const RegisterScreen = ({ route }: any) => {
     <View style={styles.container}>
       {/* PROFILE */}
       <View style={styles.top}>
-        {cleanPhoto && (
-          <Image
-            source={{ uri: cleanPhoto }}
-            style={styles.avatar}
-            resizeMode="cover"
-          />
-        )}
+        <Image
+          source={{ uri: photo }}
+          style={[styles.avatar]}
+          resizeMode="cover"
+        />
 
         {name && <Text style={styles.name}>{name}</Text>}
         {email && <Text style={styles.email}>{email}</Text>}
@@ -42,6 +39,7 @@ const RegisterScreen = ({ route }: any) => {
 
         {id && <InfoRow label="User ID" value={id} />}
         {token && <InfoRow label="Access Token" value={token} small />}
+        <LogOutButton />
       </View>
     </View>
   );
