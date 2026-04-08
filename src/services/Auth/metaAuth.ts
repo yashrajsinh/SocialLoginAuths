@@ -2,37 +2,42 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 export const loginWithFacebook = async () => {
   try {
-    // IMPORTANT: reset previous session
+    // Reset previous session
     await LoginManager.logOut();
 
-    const result = await LoginManager.logInWithPermissions([
-      'public_profile', // enough for name + photo
-    ]);
+    // Start login
+    const result = await LoginManager.logInWithPermissions(['public_profile']);
 
     if (result.isCancelled) {
+      console.log('User cancelled login');
       return null;
     }
 
+    // Get access token
     const data = await AccessToken.getCurrentAccessToken();
-    if (!data) return null;
+
+    if (!data) {
+      console.log('No access token');
+      return null;
+    }
 
     const token = data.accessToken.toString();
 
-    // Only request what always works
+    // Fetch user info (NO email to avoid error)
     const response = await fetch(
       `https://graph.facebook.com/v18.0/me?fields=id,name,picture.type(large)&access_token=${token}`,
     );
 
     const user = await response.json();
 
-    console.log('FB USER:', user);
+    const photo = user?.picture?.data?.url;
 
     return {
       provider: 'Facebook',
       token,
       id: user.id,
       name: user.name,
-      photo: user.picture?.data?.url,
+      photo,
     };
   } catch (error) {
     console.log('FB ERROR:', error);

@@ -3,6 +3,7 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import GoogleSignIn // correct import for google
+import FBSDKCoreKit // for meta auth 
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,7 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       in: window,
       launchOptions: launchOptions
     )
-
+ApplicationDelegate.shared.application(
+  application,
+  didFinishLaunchingWithOptions: launchOptions
+)
     return true
   }
 
@@ -39,7 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]
   ) -> Bool {
-    return GIDSignIn.sharedInstance.handle(url)
+    // Google
+  if GIDSignIn.sharedInstance.handle(url) {
+    return true
+  }
+
+  // Facebook
+  return ApplicationDelegate.shared.application(
+    app,
+    open: url,
+    options: options
+  )
   }
 }
 

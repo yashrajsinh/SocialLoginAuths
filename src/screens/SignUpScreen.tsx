@@ -24,7 +24,7 @@ type Props = {
 const SignUpScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(false);
 
-  // ✅ Google login
+  // Google login
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -50,7 +50,7 @@ const SignUpScreen = ({ navigation }: Props) => {
     }
   };
 
-  // ✅ Facebook login (FIXED)
+  //  Facebook login
   const handleFaceBookLogIn = async () => {
     try {
       setLoading(true);
@@ -64,7 +64,7 @@ const SignUpScreen = ({ navigation }: Props) => {
 
       ToastAndroid.show('Facebook login success 🎉', ToastAndroid.SHORT);
 
-      // 🔥 PASS FULL OBJECT
+      //  PASS FULL OBJECT
       navigation.navigate('Register', res);
     } catch (e) {
       console.log('FB ERROR:', e);
