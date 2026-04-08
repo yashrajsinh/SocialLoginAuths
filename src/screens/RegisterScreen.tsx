@@ -1,112 +1,156 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { SOCIALS } from '../providers/IconsProvide';
 
-type Props = {
-  route: any;
-  navigation: any;
-};
-//logout button
-import LogOutButton from '../components/LogOutButton/LogOutButton';
+const RegisterScreen = ({ route }: any) => {
+  const { provider, token, name, email, photo, id } = route.params || {};
 
-//logout function from auth
-import { googleLogOut } from '../services/Auth/googleAuth';
+  const cleanPhoto = photo?.replace('=s96-c', '=s400-c');
 
-const RegisterScreen = ({ route, navigation }: Props) => {
-  const { provider, email, name, profilePic } = route.params;
-  //function to handle log out
-  const handleLogout = async () => {
-    try {
-      await googleLogOut();
-      navigation.replace('SignUp');
-    } catch (error) {
-      console.log('Error logging out');
-    }
-  };
-  //show image based on login type
-  let icon = null;
-
-  if (provider === 'Google') {
-    icon = SOCIALS.google.icon;
-  } else if (provider === 'Facebook') {
-    icon = SOCIALS.facebook.icon;
-  } else if (provider === 'Apple') {
-    icon = SOCIALS.apple.icon;
-  }
-
-  if (!email) {
-    return (
-      <View style={styles.center}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+  const social = Object.values(SOCIALS).find(
+    item => item.provider === provider,
+  );
 
   return (
     <View style={styles.container}>
+      {/* PROFILE */}
+      <View style={styles.top}>
+        {cleanPhoto && (
+          <Image
+            source={{ uri: cleanPhoto }}
+            style={styles.avatar}
+            resizeMode="cover"
+          />
+        )}
+
+        {name && <Text style={styles.name}>{name}</Text>}
+        {email && <Text style={styles.email}>{email}</Text>}
+      </View>
+
+      {/* CARD */}
       <View style={styles.card}>
-        {/* Top text + icon */}
-        <View style={styles.row}>
-          <Text style={styles.provider}>Signed in using </Text>
-          {icon && <Image source={icon} style={styles.icon} />}
+        <View style={styles.headerRow}>
+          <Text style={styles.smallLabel}>Signed in with</Text>
+
+          <View style={styles.providerRow}>
+            {social?.icon && <Image source={social.icon} style={styles.icon} />}
+            <Text style={styles.provider}>{provider}</Text>
+          </View>
         </View>
 
-        {/* Profile */}
-        <Image source={{ uri: profilePic }} style={styles.avatar} />
+        <View style={styles.divider} />
 
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.email}>{email}</Text>
-        <LogOutButton onPress={handleLogout} />
+        {id && <InfoRow label="User ID" value={id} />}
+        {token && <InfoRow label="Access Token" value={token} small />}
       </View>
     </View>
   );
 };
 
+const InfoRow = ({ label, value, small = false }: any) => (
+  <View style={styles.infoRow}>
+    <Text style={styles.infoLabel}>{label}</Text>
+    <Text
+      style={[styles.infoValue, small && { fontSize: 11 }]}
+      numberOfLines={2}
+    >
+      {value}
+    </Text>
+  </View>
+);
+
 export default RegisterScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0B1220',
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
+
+  top: {
+    alignItems: 'center',
+    marginBottom: 35,
+  },
+
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#1E293B',
+  },
+
+  name: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+  email: {
+    fontSize: 13,
+    color: '#94A3B8',
+    marginTop: 3,
+  },
+
   card: {
-    width: '85%',
-    padding: 20,
-    borderRadius: 15,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    elevation: 4,
+    backgroundColor: '#111827',
+    borderRadius: 16,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: '#1F2937',
   },
-  row: {
+
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  smallLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+
+  providerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    gap: 6,
   },
+
   icon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
   },
+
   provider: {
-    fontSize: 14,
+    fontSize: 13,
+    color: '#E5E7EB',
+    fontWeight: '600',
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 10,
+
+  divider: {
+    height: 1,
+    backgroundColor: '#1F2937',
+    marginVertical: 14,
   },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
+
+  infoRow: {
+    marginBottom: 12,
   },
-  email: {
-    fontSize: 14,
-    color: 'gray',
+
+  infoLabel: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginBottom: 2,
   },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  infoValue: {
+    fontSize: 13,
+    color: '#F9FAFB',
+    fontWeight: '500',
   },
 });

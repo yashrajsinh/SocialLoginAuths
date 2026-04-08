@@ -1,70 +1,79 @@
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ToastAndroid,
+} from 'react-native';
 import React, { useState } from 'react';
 
-//const array
+// const array
 import { SOCIALS } from '../providers/IconsProvide';
-//buttons component
+
+// buttons component
 import SocialMediaButton from '../components/SocialMediaButtons/SocailMediaButtons';
-//auth service
+
+// auth service
 import { googleLogIn } from '../services/Auth/googleAuth';
 import { loginWithFacebook } from '../services/Auth/metaAuth';
 
 type Props = {
   navigation: any;
 };
-type GoogleUser = {
-  id: string;
-  name: string | null;
-  email: string;
-  photo: string | null;
-  familyName: string | null;
-  givenName: string | null;
-};
 
 const SignUpScreen = ({ navigation }: Props) => {
-  //useState for loader
   const [loading, setLoading] = useState(false);
 
-  //function to handle click
+  // ✅ Google login
   const handleLogin = async () => {
     try {
-      setLoading(true); // start loader
+      setLoading(true);
+
       const res = await googleLogIn();
 
-      // navigate ONLY after login finishes
+      if (!res) {
+        ToastAndroid.show('Google login cancelled', ToastAndroid.SHORT);
+        return;
+      }
+
+      ToastAndroid.show('Google login success 🎉', ToastAndroid.SHORT);
+
       navigation.navigate('Register', {
         provider: 'Google',
         ...res,
       });
-      console.log(res); // debug
     } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false); // stop loader
-    }
-  };
-  //handle FB login
-  const handleFaceBookLogIn = async () => {
-    try {
-      setLoading(true);
-
-      const token = await loginWithFacebook();
-
-      if (!token) {
-        console.log('Facebook login cancelled');
-        return;
-      }
-
-      navigation.navigate('Register', {
-        provider: 'Facebook',
-        token,
-      });
-    } catch (e) {
-      console.log(e);
+      console.log('GOOGLE ERROR:', e);
+      ToastAndroid.show('Google login failed', ToastAndroid.SHORT);
     } finally {
       setLoading(false);
     }
   };
+
+  // ✅ Facebook login (FIXED)
+  const handleFaceBookLogIn = async () => {
+    try {
+      setLoading(true);
+
+      const res = await loginWithFacebook();
+
+      if (!res) {
+        ToastAndroid.show('Facebook login cancelled', ToastAndroid.SHORT);
+        return;
+      }
+
+      ToastAndroid.show('Facebook login success 🎉', ToastAndroid.SHORT);
+
+      // 🔥 PASS FULL OBJECT
+      navigation.navigate('Register', res);
+    } catch (e) {
+      console.log('FB ERROR:', e);
+      ToastAndroid.show('Facebook login failed', ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -98,7 +107,8 @@ const SignUpScreen = ({ navigation }: Props) => {
           Already have an account? <Text style={styles.loginText}>Login</Text>
         </Text>
       </View>
-      {/* Show Loader */}
+
+      {/* Loader */}
       {loading && (
         <View style={styles.loader}>
           <ActivityIndicator size="large" color="#111827" />
@@ -109,6 +119,7 @@ const SignUpScreen = ({ navigation }: Props) => {
 };
 
 export default SignUpScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -151,6 +162,7 @@ const styles = StyleSheet.create({
     color: '#111827',
     fontWeight: '600',
   },
+
   loader: {
     position: 'absolute',
     top: 0,
