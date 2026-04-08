@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { SOCIALS } from '../providers/IconsProvide';
-import LogOutButton from '../components/LogOutButton/LogOutButton';
 
 const RegisterScreen = ({ route }: any) => {
   const { provider, token, name, email, photo, id } = route.params || {};
@@ -39,7 +38,6 @@ const RegisterScreen = ({ route }: any) => {
 
         {id && <InfoRow label="User ID" value={id} />}
         {token && <InfoRow label="Access Token" value={token} small />}
-        <LogOutButton />
       </View>
     </View>
   );
